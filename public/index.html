@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare | Smart Health Care</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066ff;
+            --primary-hover: #0052cc;
+            --dark-blue: #0a2540;
+            --bg-light: #f4f8fc;
+            --text-dark: #1a202c;
+            --text-gray: #4a5568;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* --- Navbar --- */
+        header {
+            background: var(--white);
+            padding: 16px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plus-icon {
+            background: var(--primary);
+            color: var(--white);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark-blue);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 24px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-gray);
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--primary);
+        }
+
+        .admin-btn {
+            background-color: #f0f4f9;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            margin-top: 75px;
+            padding: 60px 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: calc(100vh - 150px);
+        }
+
+        .hero-left { max-width: 500px; }
+
+        .tagline {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .headline {
+            font-size: 52px;
+            font-weight: 800;
+            color: var(--dark-blue);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .subtext {
+            font-size: 15px;
+            color: var(--text-gray);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .hero-btns { display: flex; gap: 15px; }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover { background-color: var(--primary-hover); }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--dark-blue);
+            border: 1px solid var(--border-color);
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .hero-right {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 450px;
+            height: 450px;
+        }
+
+        .outer-circle {
+            width: 380px;
+            height: 380px;
+            background: linear-gradient(135deg, #e3eeff 0%, #d4e5ff 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .inner-card {
+            width: 200px;
+            height: 250px;
+            background: var(--white);
+            border-radius: 100px 100px 20px 20px;
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .caduceus { font-size: 60px; color: var(--primary); }
+
+        .floating-badge {
+            position: absolute;
+            background: var(--white);
+            padding: 10px 16px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-1 { top: 60px; left: -20px; }
+        .badge-2 { bottom: 60px; right: -20px; }
+
+        .badge-title { font-weight: 700; color: var(--dark-blue); }
+        .badge-sub { font-size: 10px; color: var(--text-gray); }
+
+        .quick-access {
+            text-align: center;
+            padding: 40px 20px 80px 20px;
+        }
+
+        .section-tag {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark-blue);
+        }
+
+        .view-section {
+            display: none;
+            max-width: 850px;
+            margin: 100px auto 40px auto;
+            background: var(--white);
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .view-section.active { display: block; }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        /* --- Doctors Cards Grid --- */
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .doctor-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            background: #fafbfc;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        .doctor-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 12px;
+            border: 3px solid var(--primary);
+        }
+
+        .doctor-name { font-weight: 700; font-size: 16px; color: var(--dark-blue); }
+        .doctor-spec { color: var(--primary); font-size: 13px; font-weight: 600; margin: 4px 0; }
+        .doctor-time { font-size: 12px; color: var(--text-gray); margin-top: 8px; }
+
+        /* --- Chatbot Box --- */
+        .chat-box {
+            height: 320px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #f8fafc;
+        }
+
+        .chat-msg {
+            padding: 10px 14px;
+            border-radius: 8px;
+            max-width: 80%;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .chat-msg.user { background: var(--primary); color: var(--white); align-self: flex-end; }
+        .chat-msg.bot { background: #e2e8f0; color: var(--text-dark); align-self: flex-start; }
+        .chat-input-group { display: flex; gap: 10px; }
+
+        /* --- Admin Login & Table --- */
+        .admin-login-box {
+            max-width: 380px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 13px; }
+        th { background: #f8fafc; }
+
+        /* --- Additional pages and polished home layout --- */
+        header { backdrop-filter: blur(14px); background: rgba(255,255,255,.94); }
+        .hero { position: relative; overflow: hidden; background: radial-gradient(circle at 82% 35%, #d9eaff 0, #edf5ff 30%, #f4f8fc 68%); }
+        .hero:before { content:""; position:absolute; width:260px; height:260px; border:1px solid rgba(0,102,255,.12); border-radius:50%; right:5%; top:8%; }
+        .hero-left, .hero-right { position:relative; z-index:1; }
+        .headline { letter-spacing:-1.6px; }
+        .hero-right .outer-circle { box-shadow: 0 24px 60px rgba(0,75,180,.12); }
+        .quick-cards { max-width:1100px; margin:28px auto 0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; padding:0 20px; }
+        .quick-card { background:#fff; padding:24px 20px; border:1px solid #e5edf7; border-radius:16px; text-align:left; box-shadow:0 8px 24px rgba(15,45,80,.045); transition:transform .2s, box-shadow .2s; }
+        .quick-card:hover { transform:translateY(-4px); box-shadow:0 15px 32px rgba(15,45,80,.09); }
+        .quick-icon { width:46px; height:46px; border-radius:13px; background:#eaf2ff; color:#0066ff; display:flex; align-items:center; justify-content:center; font-size:23px; margin-bottom:14px; }
+        .quick-card h3 { color:var(--dark-blue); font-size:16px; margin-bottom:8px; }
+        .quick-card p { color:var(--text-gray); font-size:13px; line-height:1.6; margin-bottom:15px; }
+        .text-action { border:0; background:transparent; color:var(--primary); font-weight:700; cursor:pointer; padding:0; }
+        .home-trust { background:#fff; border-top:1px solid #e8eef6; padding:28px 20px; display:flex; justify-content:center; gap:50px; flex-wrap:wrap; color:#42536a; font-size:13px; font-weight:600; }
+        .home-trust span { display:flex; align-items:center; gap:8px; }
+        .page-intro { text-align:center; margin-bottom:26px; }
+        .page-intro p { color:var(--text-gray); line-height:1.7; margin-top:10px; }
+        .info-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-top:22px; }
+        .info-card { border:1px solid var(--border-color); border-radius:14px; padding:20px; background:#fbfdff; }
+        .info-card .info-icon { font-size:25px; margin-bottom:12px; }
+        .info-card h3 { color:var(--dark-blue); margin-bottom:8px; font-size:16px; }
+        .info-card p { color:var(--text-gray); font-size:14px; line-height:1.65; overflow-wrap:anywhere; }
+        .contact-note { margin-top:20px; background:#fff8e8; border:1px solid #f7df9c; color:#76551b; padding:13px 15px; border-radius:10px; font-size:13px; line-height:1.6; }
+        .form-help { color:#64748b; font-size:12px; line-height:1.5; margin-top:6px; }
+        .enquiry-success { display:none; margin-top:15px; padding:12px 14px; border-radius:9px; background:#eafaf0; color:#166534; }
+        .admin-subheading { margin:30px 0 8px; color:var(--dark-blue); }
+        .enquiry-admin-card { border:1px solid var(--border-color); border-radius:12px; padding:16px; margin:12px 0; background:#fff; }
+        .enquiry-admin-card p { margin:7px 0; color:#475569; line-height:1.5; font-size:13px; overflow-wrap:anywhere; }
+        .enquiry-admin-card textarea { width:100%; min-height:78px; padding:10px; border:1px solid #cbd5e0; border-radius:8px; resize:vertical; margin:8px 0; }
+        .status-pill { display:inline-block; padding:4px 9px; border-radius:20px; font-size:11px; font-weight:700; background:#fff2d8; color:#8a5a00; }
+        .status-pill.answered { background:#dcfce7; color:#166534; }
+        .footer { background:#0a2540; color:#dbe7f6; padding:28px 7%; display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; font-size:13px; }
+        .footer strong { color:#fff; font-size:17px; }
+        @media (max-width: 900px) { header { padding:14px 20px; } nav ul { gap:12px; flex-wrap:wrap; justify-content:flex-end; } nav a { font-size:12px; } .hero { padding:45px 28px; } .headline { font-size:42px; } .hero-right { transform:scale(.82); width:350px; margin-left:-15px; } .quick-cards { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+        @media (max-width: 620px) { header { position:sticky; top:0; align-items:flex-start; flex-direction:column; gap:12px; padding:12px 16px; } nav { width:100%; } nav ul { justify-content:flex-start; gap:10px 14px; } .hero { margin-top:0; padding:42px 22px 20px; min-height:auto; flex-direction:column; align-items:flex-start; } .headline { font-size:39px; } .hero-right { align-self:center; transform:scale(.72); height:320px; margin-top:-10px; margin-bottom:-30px; } .hero-btns { flex-wrap:wrap; } .quick-access { padding:30px 12px 45px; } .section-title { font-size:24px; } .quick-cards { grid-template-columns:1fr; padding:0 14px; } .view-section { margin:25px 12px; padding:22px 16px; } .info-grid { grid-template-columns:1fr; } .home-trust { gap:16px; align-items:flex-start; flex-direction:column; padding-left:28px; } .footer { padding:25px 22px; } }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="plus-icon">+</div>
+            <div class="logo-text">MediCare</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a onclick="showView('home')" class="active">Home</a></li>
+                <li><a onclick="showView('chatbot')">AI Chatbot</a></li>
+                <li><a onclick="showView('faq')">FAQ</a></li>
+                <li><a onclick="showView('doctors')">Doctors</a></li>
+                <li><a onclick="showView('booking')">Book Appointment</a></li>
+                <li><a onclick="showView('about')">About</a></li>
+                <li><a onclick="showView('contact')">Contact</a></li>
+                <li><a onclick="showView('enquiry')">Enquiry</a></li>
+                <li><a onclick="showView('admin')" class="admin-btn">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Home View -->
+    <div id="home-view">
+        <section class="hero">
+            <div class="hero-left">
+                <div class="tagline">Smart - Simple - Patient Friendly</div>
+                <h1 class="headline">Your Health,<br>Our Priority.</h1>
+                <p class="subtext">Welcome to MediCare Hospital. Get quick answers, explore our doctors and book your appointment online in just a few clicks.</p>
+                <div class="hero-btns">
+                    <button class="btn-primary" onclick="showView('booking')">Book an Appointment &rarr;</button>
+                    <button class="btn-secondary" onclick="showView('chatbot')">Ask AI Assistant</button>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <div class="outer-circle">
+                    <div class="inner-card">
+                        <div class="caduceus">⚕</div>
+                    </div>
+                    <div class="floating-badge badge-1">
+                        <div>✏️</div>
+                        <div>
+                            <div class="badge-title">Easy Booking</div>
+                            <div class="badge-sub">Choose doctor & time</div>
+                        </div>
+                    </div>
+                    <div class="floating-badge badge-2">
+                        <div>🤖</div>
+                        <div>
+                            <div class="badge-title">Smart Assistant</div>
+                            <div class="badge-sub">Quick inquiry 1sec</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="quick-access">
+            <div class="section-tag">QUICK ACCESS</div>
+            <h2 class="section-title">Care information, made simple</h2>
+            <p style="color:var(--text-gray); margin:12px auto 0; max-width:620px; line-height:1.7;">Explore hospital information, connect with our listed departments, or send a question to the MediCare team.</p>
+            <div class="quick-cards">
+                <article class="quick-card"><div class="quick-icon">🩺</div><h3>Our Doctors</h3><p>Explore the three listed specialist doctors and their departments.</p><button class="text-action" onclick="showView('doctors')">Meet the doctors →</button></article>
+                <article class="quick-card"><div class="quick-icon">📅</div><h3>Book a Visit</h3><p>Send an appointment request with your contact details and preferred time.</p><button class="text-action" onclick="showView('booking')">Book appointment →</button></article>
+                <article class="quick-card"><div class="quick-icon">💬</div><h3>Patient Enquiry</h3><p>Submit a question and check back for a response from hospital staff.</p><button class="text-action" onclick="showView('enquiry')">Send an enquiry →</button></article>
+                <article class="quick-card"><div class="quick-icon">📍</div><h3>Contact MediCare</h3><p>Find the project-listed location and contact channels.</p><button class="text-action" onclick="showView('contact')">Contact details →</button></article>
+            </div>
+        </section>
+        <section class="home-trust"><span>✓ Patient-friendly information</span><span>✓ Appointment requests</span><span>✓ Staff-reviewed enquiries</span><span>✓ Three listed departments</span></section>
+        <footer class="footer"><div><strong>✚ MediCare Hospital</strong><p style="margin-top:7px;">Smart, simple, patient-friendly information.</p></div><div>Contact: enquiries@medicarehospital.example <br>Demo contact details — replace before public launch.</div></footer>
+    </div>
+
+    <!-- Booking View with Gender, Age, Time Slot -->
+    <section id="booking-view" class="view-section">
+        <h2>Book an Appointment</h2>
+        <form id="appointmentForm" style="margin-top:20px;">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Patient Name</label>
+                    <input type="text" id="patient_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" id="age" min="1" max="120" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email Address (For Confirmation Mail)</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="phone" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Select Department & Specialist</label>
+                <select id="doctor" required>
+                    <option value="Dr. Sarah Sharma (General Medicine)">Dr. Sarah Sharma (General Medicine)</option>
+                    <option value="Dr. Priya Patel (Gynecologist)">Dr. Priya Patel (Gynecologist)</option>
+                    <option value="Dr. Rajesh Kumar (Orthopedic)">Dr. Rajesh Kumar (Orthopedic)</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Appointment Date</label>
+                    <input type="date" id="appointment_date" required>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Time Slot</label>
+                    <input type="time" id="appointment_time" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Reason for Visit</label>
+                <textarea id="reason" rows="3" placeholder="Describe symptoms or reason for visit..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width:100%;">Confirm & Send Email</button>
+        </form>
+    </section>
+
+    <!-- Doctors View with Fixed Photo Links -->
+    <section id="doctors-view" class="view-section">
+        <h2>Our Specialist Doctors</h2>
+        <div class="doctors-grid">
+            <div class="doctor-card">
+                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400" alt="Dr. Sarah Sharma" class="doctor-img">
+                <div class="doctor-name">Dr. Sarah Sharma</div>
+                <div class="doctor-spec">General Medicine</div>
+                <div class="doctor-time">🕒 Mon - Sat: 9:00 AM - 2:00 PM</div>
+            </div>
+
+            <div class="doctor-card">
+                <img src="https://images.pexels.com/photos/4173251/pexels-photo-4173251.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Dr. Priya Patel" class="doctor-img">
+                <div class="doctor-name">Dr. Priya Patel</div>
+                <div class="doctor-spec">Gynecologist</div>
+                <div class="doctor-time">🕒 Mon - Fri: 10:00 AM - 4:00 PM</div>
+            </div>
+
+            <div class="doctor-card">
+                <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=400" alt="Dr. Rajesh Kumar" class="doctor-img">
+                <div class="doctor-name">Dr. Rajesh Kumar</div>
+                <div class="doctor-spec">Orthopedic Specialist</div>
+                <div class="doctor-time">🕒 Tue - Sun: 11:00 AM - 5:00 PM</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Chatbot View -->
+    <section id="chatbot-view" class="view-section">
+        <h2>MediCare AI Assistant</h2>
+        <div class="chat-container" style="max-width: 600px; margin: 20px auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; background: #ffffff;">
+            <div id="chatBox" class="chat-box">
+                <p class="chat-msg bot"><strong>MediCare AI:</strong> Hello! How can I assist you with doctor schedules, OPD timings, or hospital services today?</p>
+            </div>
+            <div class="chat-input-group">
+                <input type="text" id="chatInput" placeholder="Ask a question..." style="flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;">
+                <button onclick="sendMessage()" class="btn-primary">Send</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic Clickable FAQ View -->
+    <section id="faq-view" class="view-section">
+        <h2>Frequently Asked Questions</h2>
+        <div id="faq-container" style="max-width: 750px; margin: 20px auto; text-align: left;"></div>
+    </section>
+
+    <!-- About MediCare View -->
+    <section id="about-view" class="view-section">
+        <div class="page-intro"><div class="section-tag">ABOUT US</div><h2 class="section-title">About MediCare Hospital</h2><p>MediCare is a hospital enquiry and appointment-information project designed to help patients find basic information and contact the hospital team more easily.</p></div>
+        <div class="info-grid">
+            <article class="info-card"><div class="info-icon">💙</div><h3>Patient-first approach</h3><p>Clear information, simple navigation and a straightforward way to send questions to hospital staff.</p></article>
+            <article class="info-card"><div class="info-icon">🩺</div><h3>Listed departments</h3><p>General Medicine, Gynecology and Orthopedics are the three departments currently listed in this project.</p></article>
+            <article class="info-card"><div class="info-icon">📆</div><h3>Appointment requests</h3><p>Patients can submit appointment requests through the online form. Availability should be confirmed by the hospital.</p></article>
+            <article class="info-card"><div class="info-icon">💬</div><h3>Patient enquiries</h3><p>Use the Enquiry page to send a question with your contact details. Staff can review it in the Admin panel and record a response.</p></article>
+            <article class="info-card"><div class="info-icon">🔐</div><h3>Respectful handling</h3><p>Share only the information needed to answer your enquiry. Do not submit passwords, OTPs or unnecessary sensitive medical details.</p></article>
+            <article class="info-card"><div class="info-icon">ℹ️</div><h3>Project information</h3><p>Doctor schedules, services and contact details shown here are project-listed information and should be verified by hospital management before real-world use.</p></article>
+        </div>
+        <div class="contact-note">This website is a demonstration project. Contact details marked as demo placeholders must be replaced with verified hospital contact information before public use.</div>
+    </section>
+
+    <!-- Contact View -->
+    <section id="contact-view" class="view-section">
+        <div class="page-intro"><div class="section-tag">GET IN TOUCH</div><h2 class="section-title">Contact MediCare</h2><p>Use the details below for this project demonstration. Please verify or replace the placeholder contact details before publishing.</p></div>
+        <div class="info-grid">
+            <article class="info-card"><div class="info-icon">📞</div><h3>Phone</h3><p><strong>0816-555-0147</strong><br>Demo placeholder number — not a verified hospital line.</p><p style="margin-top:10px;"><a href="tel:08165550147">Call (demo number)</a></p></article>
+            <article class="info-card"><div class="info-icon">✉️</div><h3>Email enquiries</h3><p><strong>enquiries@medicarehospital.example</strong><br>Demo email address; the reserved .example domain will not deliver real mail.</p><p style="margin-top:10px;"><a href="mailto:enquiries@medicarehospital.example">Open email app</a></p></article>
+            <article class="info-card"><div class="info-icon">📍</div><h3>Location</h3><p>Near MG Petrol Bank, Batwadi, Tumakuru, Karnataka 572103.</p><p style="margin-top:10px;">Project-listed address — verify before visiting.</p></article>
+        </div>
+        <div class="contact-note">The phone number and email above are fictional demonstration placeholders, not confirmed hospital contacts. For a real deployment, replace them with the hospital's verified details.</div>
+        <div style="text-align:center; margin-top:22px;"><button class="btn-primary" onclick="showView('enquiry')">Send an enquiry →</button></div>
+    </section>
+
+    <!-- Patient Enquiry View -->
+    <section id="enquiry-view" class="view-section">
+        <div class="page-intro"><div class="section-tag">PATIENT SUPPORT</div><h2 class="section-title">Send an Enquiry</h2><p>Enter your question and contact details. The enquiry will be saved for hospital staff to review in the Admin panel.</p></div>
+        <form id="enquiryForm" style="margin-top:20px;">
+            <div class="form-row">
+                <div class="form-group"><label for="enquiry_name">Your name</label><input id="enquiry_name" name="name" required maxlength="100" autocomplete="name" placeholder="Enter your full name"></div>
+                <div class="form-group"><label for="enquiry_email">Email address</label><input id="enquiry_email" name="email" type="email" required maxlength="150" autocomplete="email" placeholder="you@example.com"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label for="enquiry_phone">Phone number (optional)</label><input id="enquiry_phone" name="phone" maxlength="20" autocomplete="tel" placeholder="Contact number"></div>
+                <div class="form-group"><label for="enquiry_category">Enquiry type</label><select id="enquiry_category" name="category" required><option value="">Select a topic</option><option>Appointment</option><option>Doctor or department</option><option>Hospital services</option><option>Billing or insurance</option><option>Feedback or complaint</option><option>Other question</option></select></div>
+            </div>
+            <div class="form-group"><label for="enquiry_message">Your question</label><textarea id="enquiry_message" name="message" rows="5" required maxlength="3000" placeholder="Write your question here. Please do not include passwords, OTPs or unnecessary sensitive medical details."></textarea><p class="form-help">Please do not use this form for medical emergencies. For a life-threatening emergency in India, call 112.</p></div>
+            <button type="submit" class="btn-primary" style="width:100%;">Submit Enquiry</button>
+            <div id="enquirySuccess" class="enquiry-success" role="status"></div>
+        </form>
+    </section>
+
+    <!-- Protected Admin View -->
+    <section id="admin-view" class="view-section">
+        <div id="admin-login-wrapper" class="admin-login-box">
+            <h2 style="text-align:center; margin-bottom:15px;">Admin Login</h2>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="admin_user" required placeholder="Enter admin username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="admin_pass" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%;">Login to Admin Panel</button>
+            </form>
+        </div>
+
+        <div id="admin-dashboard" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>Admin Dashboard - Appointments</h2>
+                <button class="btn-secondary" onclick="adminLogout()">Logout</button>
+            </div>
+            <button class="btn-primary" onclick="loadAdminData()" style="margin: 15px 0;">Refresh Records</button>
+            <div style="overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Patient</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Doctor</th>
+                            <th>Date & Time</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody"></tbody>
+                </table>
+            </div>
+            <h3 class="admin-subheading">Patient Enquiries</h3>
+            <p style="color:#64748b; font-size:13px; line-height:1.6;">Review patient questions below. Write a response and select “Save response”. The response is saved in the project database and the enquiry status changes to Answered. If email settings are configured, the system will also try to email the response.</p>
+            <button class="btn-secondary" onclick="loadAdminEnquiries()" style="margin:12px 0;">Refresh Enquiries</button>
+            <div id="adminEnquiriesList"><p style="color:#64748b;">Login to view patient enquiries.</p></div>
+        </div>
+    </section>
+
+    <script>
+        let isAdminLoggedIn = false;
+
+        function showView(viewName) {
+            // Hide home view
+            const homeView = document.getElementById('home-view');
+            if (homeView) homeView.style.display = 'none';
+
+            // Hide all section views
+            const views = document.querySelectorAll('.view-section');
+            views.forEach(v => {
+                v.classList.remove('active');
+            });
+
+            // Handle home view click
+            if (viewName === 'home' || viewName === 'home-view') {
+                if (homeView) homeView.style.display = 'block';
+                document.querySelectorAll('nav a').forEach(a => a.classList.toggle('active', (a.getAttribute('onclick') || '').includes("showView('home')")));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // Find target section
+            let targetView = document.getElementById(viewName) || document.getElementById(viewName + '-view');
+            if (targetView) {
+                targetView.classList.add('active');
+                document.querySelectorAll('nav a').forEach(a => a.classList.toggle('active', (a.getAttribute('onclick') || '').includes("showView('" + viewName + "')")));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (viewName === 'admin' && isAdminLoggedIn) { loadAdminData(); loadAdminEnquiries(); }
+            } else {
+                console.error('No matching view section found for:', viewName);
+            }
+        }
+
+        /* --- Admin Auth logic --- */
+        document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('admin_user').value;
+            const p = document.getElementById('admin_pass').value;
+
+            if (u === 'admin' && p === 'admin123') {
+                isAdminLoggedIn = true;
+                checkAdminState();
+                loadAdminData();
+                loadAdminEnquiries();
+            } else {
+                alert('Invalid Username or Password! (Default: admin / admin123)');
+            }
+        });
+
+        function checkAdminState() {
+            if (isAdminLoggedIn) {
+                document.getElementById('admin-login-wrapper').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
+            } else {
+                document.getElementById('admin-login-wrapper').style.display = 'block';
+                document.getElementById('admin-dashboard').style.display = 'none';
+            }
+        }
+
+        function adminLogout() {
+            isAdminLoggedIn = false;
+            document.getElementById('adminLoginForm').reset();
+            checkAdminState();
+        }
+
+        /* --- Booking Form logic --- */
+        document.getElementById('appointmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                patient_name: document.getElementById('patient_name').value,
+                age: document.getElementById('age').value,
+                gender: document.getElementById('gender').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                doctor: document.getElementById('doctor').value,
+                appointment_date: document.getElementById('appointment_date').value,
+                appointment_time: document.getElementById('appointment_time').value,
+                reason: document.getElementById('reason').value
+            };
+
+            const res = await fetch('/api/appointments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const responseData = await res.json();
+
+            if (res.ok) {
+                alert('Appointment Booked Successfully! A confirmation email has been sent.');
+                document.getElementById('appointmentForm').reset();
+                showView('home');
+            } else {
+                alert(responseData.error || 'Error booking appointment.');
+            }
+        });
+
+        /* --- Patient enquiry submission --- */
+        document.getElementById('enquiryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Save the form reference before awaiting fetch; currentTarget becomes null after the event handler yields.
+            const form = e.currentTarget;
+            const success = document.getElementById('enquirySuccess');
+            const submitButton = form.querySelector('button[type="submit"]');
+            const payload = {
+                name: document.getElementById('enquiry_name').value.trim(),
+                email: document.getElementById('enquiry_email').value.trim(),
+                phone: document.getElementById('enquiry_phone').value.trim(),
+                category: document.getElementById('enquiry_category').value,
+                subject: document.getElementById('enquiry_category').value + ' enquiry',
+                message: document.getElementById('enquiry_message').value.trim()
+            };
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+            success.style.display = 'none';
+            try {
+                const res = await fetch('/api/enquiries', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Could not submit enquiry.');
+                success.textContent = `Thank you. Your enquiry was saved successfully. Reference number: ENQ-${data.id}. Hospital staff can review it in the Admin panel.`;
+                success.style.display = 'block';
+                form.reset();
+            } catch (err) {
+                success.textContent = err.message || 'Unable to submit your enquiry right now. Please try again.';
+                success.style.display = 'block';
+                success.style.background = '#fff1f2';
+                success.style.color = '#9f1239';
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Enquiry';
+            }
+        });
+
+        /* --- Staff enquiry review and response --- */
+        async function loadAdminEnquiries() {
+            if (!isAdminLoggedIn) return;
+            const container = document.getElementById('adminEnquiriesList');
+            container.innerHTML = '<p style="color:#64748b;">Loading enquiries...</p>';
+            try {
+                const res = await fetch('/api/admin/enquiries');
+                const enquiries = await res.json();
+                if (!res.ok) throw new Error(enquiries.error || 'Could not load enquiries.');
+                if (!enquiries.length) { container.innerHTML = '<p style="color:#64748b; margin-top:12px;">No patient enquiries have been submitted yet.</p>'; return; }
+                container.innerHTML = '';
+                enquiries.forEach(item => {
+                    const card = document.createElement('article');
+                    card.className = 'enquiry-admin-card';
+                    const status = document.createElement('span');
+                    status.className = 'status-pill' + (item.status === 'Answered' ? ' answered' : '');
+                    status.textContent = item.status || 'Pending';
+                    const title = document.createElement('h4');
+                    title.textContent = `ENQ-${item.id}: ${item.subject}`;
+                    title.style.color = '#0a2540';
+                    const meta = document.createElement('p');
+                    meta.textContent = `${item.name} • ${item.email}${item.phone ? ' • ' + item.phone : ''} • ${item.category} • ${item.created_at}`;
+                    const question = document.createElement('p');
+                    question.textContent = 'Question: ' + item.message;
+                    const responseLabel = document.createElement('label');
+                    responseLabel.textContent = 'Staff response';
+                    responseLabel.style.fontWeight = '600';
+                    responseLabel.style.fontSize = '13px';
+                    const textarea = document.createElement('textarea');
+                    textarea.maxLength = 3000;
+                    textarea.placeholder = 'Type the response to the patient...';
+                    textarea.value = item.response || '';
+                    const existing = document.createElement('p');
+                    existing.textContent = item.response ? 'Saved response: ' + item.response : 'No response saved yet.';
+                    const button = document.createElement('button');
+                    button.className = 'btn-primary';
+                    button.type = 'button';
+                    button.textContent = 'Save response';
+                    button.addEventListener('click', async () => {
+                        if (!textarea.value.trim()) { alert('Please write a response first.'); return; }
+                        button.disabled = true; button.textContent = 'Saving...';
+                        try {
+                            const replyRes = await fetch(`/api/admin/enquiries/${item.id}/reply`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ response:textarea.value.trim() }) });
+                            const replyData = await replyRes.json();
+                            if (!replyRes.ok) throw new Error(replyData.error || 'Could not save response.');
+                            alert(replyData.emailSent ? 'Response saved and email sent.' : 'Response saved in the database. Email was not sent (email settings may not be configured).');
+                            loadAdminEnquiries();
+                        } catch (err) { alert(err.message || 'Could not save response.'); }
+                        finally { button.disabled = false; button.textContent = 'Save response'; }
+                    });
+                    card.append(status, title, meta, question, responseLabel, textarea, button);
+                    if (item.response) card.appendChild(existing);
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                container.innerHTML = '<p style="color:#9f1239;">Could not load enquiries. Please check the server and refresh.</p>';
+            }
+        }
+
+        /* --- AI Chatbot logic --- */
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            const chatBox = document.getElementById('chatBox');
+            const userBubble = document.createElement('div');
+            userBubble.className = 'chat-msg user';
+            userBubble.textContent = message;
+            chatBox.appendChild(userBubble);
+            input.value = '';
+            const loading = document.createElement('div');
+            loading.className = 'chat-msg bot';
+            loading.textContent = 'MediCare AI is checking hospital information…';
+            chatBox.appendChild(loading);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            try {
+                const res = await fetch('/api/chatbot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }) });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Chatbot request failed');
+                loading.textContent = data.reply || 'Sorry, I could not find a verified answer. Please contact MediCare reception.';
+            } catch (error) {
+                loading.textContent = 'I cannot connect to the chatbot server right now. Please check that the MediCare project server is running and try again.';
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        /* Allow pressing Enter key to send message in AI Chatbot */
+        document.getElementById('chatInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        /* --- Fetch Admin Data --- */
+        async function loadAdminData() {
+            if (!isAdminLoggedIn) return;
+            const res = await fetch('/api/admin/appointments');
+            const data = await res.json();
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = '';
+            
+            data.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.patient_name}</td>
+                        <td>${item.age || '-'}</td>
+                        <td>${item.gender || '-'}</td>
+                        <td>${item.email}</td>
+                        <td>${item.doctor}</td>
+                        <td>${item.appointment_date} ${item.appointment_time || ''}</td>
+                        <td>${item.reason || '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        /* --- Dynamic Clickable FAQ Loader --- */
+        async function loadFAQs() {
+            try {
+                const response = await fetch('/api/faqs');
+                const faqs = await response.json();
+
+                const faqContainer = document.getElementById('faq-container');
+                if (!faqContainer) return;
+
+                faqContainer.innerHTML = ''; // Clear container
+
+                faqs.forEach(faq => {
+                    const faqCard = document.createElement('div');
+                    faqCard.style.cssText = 'border: 1px solid #e2e8f0; margin-bottom: 12px; border-radius: 8px; overflow: hidden; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05);';
+
+                    faqCard.innerHTML = `
+                        <div class="faq-question" style="padding: 16px 20px; font-weight: 600; color: #0066ff; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                            <span>${faq.id}. ${faq.question}</span>
+                            <span class="faq-toggle-icon" style="font-size: 18px; font-weight: bold; color: #64748b;">+</span>
+                        </div>
+                        <div class="faq-answer" style="display: none; padding: 16px 20px; border-top: 1px solid #e2e8f0; background: #ffffff; color: #4a5568; line-height: 1.5;">
+                            ${faq.answer}
+                        </div>
+                    `;
+
+                    // Toggle answer display on clicking the question
+                    const questionHeader = faqCard.querySelector('.faq-question');
+                    questionHeader.addEventListener('click', () => {
+                        const answer = faqCard.querySelector('.faq-answer');
+                        const icon = faqCard.querySelector('.faq-toggle-icon');
+                        const isHidden = answer.style.display === 'none';
+
+                        answer.style.display = isHidden ? 'block' : 'none';
+                        icon.textContent = isHidden ? '−' : '+';
+                        questionHeader.style.background = isHidden ? '#eff6ff' : '#f8fafc';
+                    });
+
+                    faqContainer.appendChild(faqCard);
+                });
+            } catch (error) {
+                console.error('Error fetching FAQs:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadFAQs);
+    </script>
+</body>
+</html>

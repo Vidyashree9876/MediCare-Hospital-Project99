@@ -1,6 +1,7 @@
+
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const path = require('path');
 const { GoogleGenAI } = require('@google/genai');
 require('dotenv').config();
@@ -78,13 +79,31 @@ db.serialize(() => {
 // EMAIL CONFIGURATION
 // ==========================================
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+const resend = process.env.RESEND_API_KEY
+    ? new Resend(process.env.RESEND_API_KEY)
+    : null;
+
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'MediCare <onboarding@resend.dev>';
+
+async function sendEmail({ to, subject, text, html }) {
+    if (!resend) {
+        throw new Error('RESEND_API_KEY is missing.');
     }
-});
+
+    const { data, error } = await resend.emails.send({
+        from: FROM_EMAIL,
+        to,
+        subject,
+        text,
+        html
+    });
+
+    if (error) {
+        throw new Error(error.message || 'Resend email failed.');
+    }
+
+    return data;
+}
 
 // ==========================================
 // FAQ DATA
@@ -384,35 +403,29 @@ app.post('/api/appointments', (req, res) => {
                         `
                     };
 
-                    if (process.env.EMAIL_USER && process.env.EMAIL_PASS && email) {
 
-                        transporter.sendMail(
-                            mailOptions,
-                            (mailErr, info) => {
+                       if (process.env.RESEND_API_KEY && email) {
 
-                                if (mailErr) {
-                                    console.log(
-                                        'Email Note:',
-                                        mailErr.message
-                                    );
-                                } else {
-                                    console.log(
-                                        'Email sent:',
-                                        info.response
-                                    );
-                                }
+    sendEmail({
+        to: email,
+        subject: mailOptions.subject,
+        text: mailOptions.text,
+        html: mailOptions.html
+    })
+    .then(data => {
+        console.log('Appointment email sent:', data.id);
+    })
+    .catch(mailErr => {
+        console.error('Appointment email failed:', mailErr.message);
+    });
 
-                            }
-                        );
+} else {
 
-                    } else {
+    console.log(
+        'Email not sent: RESEND_API_KEY or patient email is missing.'
+    );
 
-                        console.log(
-                            'Email not sent: EMAIL_USER or EMAIL_PASS is missing in .env'
-                        );
-
-                    }
-
+}
                     res.json({
                         success: true,
                         id: this.lastID
@@ -468,49 +481,53 @@ app.get('/api/cancel-appointment/:id', (req, res) => {
                         console.error(updateErr);
                         return res.status(500).send('Could not cancel the appointment. Please try again.');
                     }
+// Send cancellation confirmation email to the patient.
+if (process.env.RESEND_API_KEY && appointment.email) {
 
-                    // Send cancellation confirmation email to the patient.
-                    if (process.env.EMAIL_USER && process.env.EMAIL_PASS && appointment.email) {
+    const cancellationMailOptions = {
+        to: appointment.email,
+        subject: 'Appointment Cancellation Confirmation - MediCare Health System',
+        text:
+            `Hello ${appointment.patient_name}, your appointment with ${appointment.doctor} on ${appointment.appointment_date} at ${appointment.appointment_time} has been cancelled successfully. Thank you for choosing MediCare Hospital.`,
+        html: `
+            <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; border: 1px solid #e0e0e0; border-radius: 8px;">
+                <h2 style="color: #dc3545;">Appointment Cancelled</h2>
+                <p>Dear <strong>${appointment.patient_name}</strong>,</p>
+                <p>Your appointment has been <strong>cancelled successfully</strong>.</p>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td><strong>Doctor:</strong></td>
+                        <td>${appointment.doctor}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Date:</strong></td>
+                        <td>${appointment.appointment_date}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time:</strong></td>
+                        <td>${appointment.appointment_time}</td>
+                    </tr>
+                </table>
+                <p>A cancellation confirmation has been recorded for your appointment.</p>
+                <p>Thank you for choosing MediCare Hospital!</p>
+            </div>
+        `
+    };
 
-                        const cancellationMailOptions = {
-                            from: `"MediCare Health System" <${process.env.EMAIL_USER}>`,
-                            to: appointment.email,
-                            subject: 'Appointment Cancellation Confirmation - MediCare Health System',
-                            text:
-                                `Hello ${appointment.patient_name}, your appointment with ${appointment.doctor} on ${appointment.appointment_date} at ${appointment.appointment_time} has been cancelled successfully. Thank you for choosing MediCare Hospital.`,
-                            html: `
-                                <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; border: 1px solid #e0e0e0; border-radius: 8px;">
-                                    <h2 style="color: #dc3545; margin-top: 0;">Appointment Cancelled</h2>
-                                    <p>Dear <strong>${appointment.patient_name}</strong>,</p>
-                                    <p>Your appointment has been <strong>cancelled successfully</strong>.</p>
-                                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px; border: 1px solid #ddd;">
-                                        <tr>
-                                            <td style="padding: 8px; border: 1px solid #ddd;"><strong>Doctor / Department:</strong></td>
-                                            <td style="padding: 8px; border: 1px solid #ddd;">${appointment.doctor}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding: 8px; border: 1px solid #ddd;"><strong>Date:</strong></td>
-                                            <td style="padding: 8px; border: 1px solid #ddd;">${appointment.appointment_date}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="padding: 8px; border: 1px solid #ddd;"><strong>Time:</strong></td>
-                                            <td style="padding: 8px; border: 1px solid #ddd;">${appointment.appointment_time}</td>
-                                        </tr>
-                                    </table>
-                                    <p style="margin-top: 20px;">A cancellation confirmation has been recorded for your appointment.</p>
-                                    <p>Thank you for choosing MediCare Hospital!</p>
-                                </div>
-                            `
-                        };
+    sendEmail({
+        to: cancellationMailOptions.to,
+        subject: cancellationMailOptions.subject,
+        text: cancellationMailOptions.text,
+        html: cancellationMailOptions.html
+    })
+    .then(data => {
+        console.log('Cancellation email sent:', data.id);
+    })
+    .catch(mailErr => {
+        console.error('Cancellation email failed:', mailErr.message);
+    });
 
-                        transporter.sendMail(cancellationMailOptions, (mailErr, info) => {
-                            if (mailErr) {
-                                console.log('Cancellation email note:', mailErr.message);
-                            } else {
-                                console.log('Cancellation email sent:', info.response);
-                            }
-                        });
-                    }
+}
 
                     res.send(`
                         <div style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
@@ -925,16 +942,20 @@ app.post('/api/enquiries', (req, res) => {
                 return res.status(500).json({ error: 'The enquiry could not be saved. Please try again.' });
             }
             // Optional staff notification. Enquiry storage still succeeds if email is not configured.
-            let notificationSent = false;
-            if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-                transporter.sendMail({
-                    from: process.env.EMAIL_USER,
+            if (process.env.RESEND_API_KEY && process.env.EMAIL_USER) {
+                sendEmail({
                     to: process.env.EMAIL_USER,
                     subject: `New MediCare patient enquiry #${this.lastID}: ${subject}`,
                     text: `A new patient enquiry was submitted.\n\nReference: ENQ-${this.lastID}\nName: ${name}\nEmail: ${email}\nPhone: ${phone || 'Not provided'}\nCategory: ${category}\nSubject: ${subject}\n\nQuestion:\n${message}`
-                }).then(() => { notificationSent = true; }).catch(err => console.error('Enquiry notification email failed:', err.message));
+                })
+                .then(data => console.log('Enquiry notification email sent:', data.id))
+                .catch(err => console.error('Enquiry notification email failed:', err.message));
             }
-            return res.status(201).json({ success: true, id: this.lastID, notificationConfigured: Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS) });
+            return res.status(201).json({
+                success: true,
+                id: this.lastID,
+                notificationConfigured: Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_USER)
+            });
         });
 });
 
@@ -954,15 +975,16 @@ app.post('/api/admin/enquiries/:id/reply', (req, res) => {
         if (!enquiry) return res.status(404).json({ error: 'Enquiry not found.' });
         db.run(`UPDATE patient_enquiries SET response = ?, status = 'Answered', responded_at = CURRENT_TIMESTAMP WHERE id = ?`, [responseText, id], function (updateErr) {
             if (updateErr) return res.status(500).json({ error: 'Could not save the response.' });
-            if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            if (!process.env.RESEND_API_KEY) {
                 return res.json({ success: true, emailSent: false, message: 'Response saved in the database. Email is not configured.' });
             }
-            transporter.sendMail({
-                from: process.env.EMAIL_USER,
+            sendEmail({
                 to: enquiry.email,
                 subject: `MediCare response to your enquiry #${id}: ${enquiry.subject}`,
                 text: `Hello ${enquiry.name},\n\nThank you for contacting MediCare. Here is the response to your enquiry (reference ENQ-${id}):\n\n${responseText}\n\nIf you need further assistance, please contact the hospital using its verified contact details.\n\nMediCare Hospital`
-            }).then(() => res.json({ success: true, emailSent: true })).catch(emailErr => {
+            })
+            .then(() => res.json({ success: true, emailSent: true }))
+            .catch(emailErr => {
                 console.error('Could not email enquiry response:', emailErr.message);
                 res.json({ success: true, emailSent: false, message: 'Response saved, but email could not be sent. Check email settings.' });
             });
